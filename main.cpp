@@ -24,7 +24,7 @@ int main() {
         line_number++;
         size_t pos = 0;
         while ((pos = line.find(keyword, pos)) != string::npos) {
-            cout << "Se encontro la cadena en la linea: " << line_number << " en la posicion: " << pos << endl;
+            cout << "Se encontró la cadena en la línea " << line_number << " en la posición " << pos << endl;
             pos += keyword.length();
             total_occurrences++;
         }
@@ -32,8 +32,7 @@ int main() {
 
     if (total_occurrences == 0) {
         cout << "No se encontraron ocurrencias de la cadena: " << keyword << endl;
-    }
-    else {
+    } else {
         cout << "Se encontraron: " << total_occurrences << " ocurrencias de la cadena: " << keyword << endl;
     }
 
@@ -41,4 +40,3 @@ int main() {
 
     return 0;
 }
-

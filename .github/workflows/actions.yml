@@ -1,10 +1,6 @@
 name: C/C++ CI
 
-on:
-  push:
-    branches:
-      - main  
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   build:
@@ -19,14 +15,14 @@ jobs:
         git config --global user.name "haroldstx"
         git config --global user.email "haroldhdiaz@gmail.com"
 
-    - name: Set up C++ compiler
+    - name: Install dependencies
       run: sudo apt-get install -y g++
 
     - name: Compile main.cpp
       run: g++ -o main main.cpp
 
     - name: Create input file
-      run: echo "Esta es una prueba. Busca la palabra 'lluvia' en este archivo de texto." > Archivo.txt
+      run: echo "Esta es una prueba. Busca la palabra 'prueba' en este archivo de texto." > Archivo.txt
 
     - name: Run the program
-      run: ./main
+      run: ./main < Archivo.txt
