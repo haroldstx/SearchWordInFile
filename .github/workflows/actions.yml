@@ -22,7 +22,10 @@ jobs:
     - name: Compile buscar_palabra.cpp
       run: g++ -o buscar_palabra buscar_palabra.cpp
 
+    - name: Create input file
+      run: echo "Esta es una prueba. Busca la palabra 'lluvia' en este archivo de texto." > Archivo.txt
+
     - name: Run the program
-      run: ./buscar_palabra
+      run: ./buscar_palabra 
       env:
           INPUT_FILE: Archivo.txt
