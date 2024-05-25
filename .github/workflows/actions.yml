@@ -1,0 +1,28 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Git user
+      run: |
+        git config --global user.name "haroldstx"
+        git config --global user.email "haroldhdiaz@gmail.com"
+
+    - name: Set up C++ compiler
+      run: sudo apt-get install -y g++
+
+    - name: Compile buscar_palabra.cpp
+      run: g++ -o buscar_palabra buscar_palabra.cpp
+
+    - name: Run the program
+      run: ./buscar_palabra
+      env:
+          INPUT_FILE: Archivo.txt
