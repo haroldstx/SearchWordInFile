@@ -1,10 +1,13 @@
 name: C/C++ CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main  
+  pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,13 +22,11 @@ jobs:
     - name: Set up C++ compiler
       run: sudo apt-get install -y g++
 
-    - name: Compile buscar_palabra.cpp
-      run: g++ -o buscar_palabra buscar_palabra.cpp
+    - name: Compile main.cpp
+      run: g++ -o main main.cpp
 
     - name: Create input file
       run: echo "Esta es una prueba. Busca la palabra 'lluvia' en este archivo de texto." > Archivo.txt
 
     - name: Run the program
-      run: ./buscar_palabra 
-      env:
-          INPUT_FILE: Archivo.txt
+      run: ./main
