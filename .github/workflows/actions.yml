@@ -10,8 +10,7 @@ on:
 
 env:
   DEPLOY_USER: haroldstx
-  DEPLOY_HOST: 192.168.100.8
-  DEPLOY_PATH: /.github/workflows
+  DEPLOY_HOST: 192.168.100.8 # Reemplazar con tu dirección IP o nombre de dominio
 
 jobs:
   build-and-test:
@@ -33,11 +32,11 @@ jobs:
       run: g++ -o main main.cpp  # Comando de compilación específico
 
     - name: Lint code
-      run: |  # Aquí puedes agregar el comando de linting que utilices
+      run: |
         echo "Linting no configurado"  # Ejemplo de comando de placeholder
 
     - name: Run unit tests
-      run: |  # Aquí puedes agregar los comandos para ejecutar pruebas unitarias
+      run: |
         echo "Pruebas unitarias no configuradas"  # Ejemplo de comando de placeholder
 
     - name: Create input file
@@ -64,13 +63,13 @@ jobs:
       run: sudo apt-get install -y g++
 
     - name: Compile project
-      run: g++ -o main main.cpp  
+      run: g++ -o main main.cpp  # Comando de compilación específico
 
     - name: Deploy artifact to production server
       env:
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       run: |
-        scp -i $DEPLOY_KEY ./main ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{ env.DEPLOY_PATH }}
+        scp -i $DEPLOY_KEY ./main ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:/workspaces/SearchWordInFile/var/www/myapp
 
     - name: Validate deployment
-      run: ssh -i $DEPLOY_KEY ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "cd ${{ env.DEPLOY_PATH }} && ./main < Archivo.txt"
+      run: ssh -i $DEPLOY_KEY ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "cd /workspaces/SearchWordInFile/var/www/myapp  && ./main < Archivo.txt"
