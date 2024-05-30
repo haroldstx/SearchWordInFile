@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.10)
 Todo pasa por algo
 Iba por ahi y le dije hola
 Olas pasan por doquier
