@@ -16,11 +16,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up C++ environment
-      uses: lukka/get-cmake@v3
-      with:
-        cmake-version: '3.21.3'
-      
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
     - name: Install dependencies
       run: sudo apt-get install -y g++ make
 
@@ -54,11 +54,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up C++ environment
-      uses: lukka/get-cmake@v3
-      with:
-        cmake-version: '3.21.3'
-      
+    - name: Install CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+
     - name: Install dependencies
       run: sudo apt-get install -y g++ make
 
@@ -84,5 +84,5 @@ jobs:
       env:
         PROD_SERVER_USER: ${{ secrets.PROD_SERVER_USER }}
         PROD_SERVER_HOST: ${{ secrets.PROD_SERVER_HOST }}
-        DEPLOY_PATH: /.github/workflows
+        DEPLOY_PATH: /.github/workflows 
       run: ssh -o StrictHostKeyChecking=no ${{ env.PROD_SERVER_USER }}@${{ env.PROD_SERVER_HOST }} "cd ${{ env.DEPLOY_PATH }} && ./run_smoke_tests.sh"
