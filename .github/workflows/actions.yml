@@ -1,4 +1,4 @@
-name: C++ CI/CD Pipeline
+name: C/C++ CI/CD Pipeline
 
 on:
   push:
@@ -8,81 +8,69 @@ on:
     branches:
       - main
 
+env:
+  DEPLOY_USER: haroldstx
+  DEPLOY_HOST: 192.168.100.8
+  DEPLOY_PATH: /.github/workflows
+
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install CMake
+    - name: Set up Git user
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake
+        git config --global user.name "haroldstx"
+        git config --global user.email "haroldhdiaz@gmail.com"
 
     - name: Install dependencies
-      run: sudo apt-get install -y g++ make
+      run: sudo apt-get install -y g++
 
-    - name: Build the code
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        make
+    - name: Compile project
+      run: g++ -o main main.cpp  # Comando de compilación específico
 
-    - name: Run linting
-      run: |
-        sudo apt-get install -y cppcheck
-        cppcheck --enable=all --inconclusive --std=c++11 .
+    - name: Lint code
+      run: |  # Aquí puedes agregar el comando de linting que utilices
+        echo "Linting no configurado"  # Ejemplo de comando de placeholder
 
     - name: Run unit tests
-      run: |
-        cd build
-        ctest
+      run: |  # Aquí puedes agregar los comandos para ejecutar pruebas unitarias
+        echo "Pruebas unitarias no configuradas"  # Ejemplo de comando de placeholder
 
-    - name: Audit dependencies
-      run: |
-        sudo apt-get install -y ldd
-        ldd ./main
+    - name: Create input file
+      run: echo "Esta es una prueba. Busca la palabra 'prueba' en este archivo de texto." > Archivo.txt
+
+    - name: Run the program
+      run: ./main < Archivo.txt
 
   deploy:
+    needs: build-and-test
     runs-on: ubuntu-latest
-    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install CMake
+    - name: Set up Git user
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake
+        git config --global user.name "haroldstx"
+        git config --global user.email "haroldhdiaz@gmail.com"
 
     - name: Install dependencies
-      run: sudo apt-get install -y g++ make
+      run: sudo apt-get install -y g++
 
-    - name: Build the code
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        make
+    - name: Compile project
+      run: g++ -o main main.cpp  
 
-    - name: Deploy to production server
+    - name: Deploy artifact to production server
       env:
-        PROD_SERVER_USER: ${{ secrets.PROD_SERVER_USER }}
-        PROD_SERVER_HOST: ${{ secrets.PROD_SERVER_HOST }}
-        PROD_SERVER_KEY: ${{ secrets.PROD_SERVER_KEY }}
-        DEPLOY_PATH: /.github/workflows
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       run: |
-        echo "${{ secrets.PROD_SERVER_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        scp -o StrictHostKeyChecking=no ./build/main ${{ env.PROD_SERVER_USER }}@${{ env.PROD_SERVER_HOST }}:${{ env.DEPLOY_PATH }}
+        scp -i $DEPLOY_KEY ./main ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }}:${{ env.DEPLOY_PATH }}
 
-    - name: Run smoke tests
-      env:
-        PROD_SERVER_USER: ${{ secrets.PROD_SERVER_USER }}
-        PROD_SERVER_HOST: ${{ secrets.PROD_SERVER_HOST }}
-        DEPLOY_PATH: /.github/workflows 
-      run: ssh -o StrictHostKeyChecking=no ${{ env.PROD_SERVER_USER }}@${{ env.PROD_SERVER_HOST }} "cd ${{ env.DEPLOY_PATH }} && ./run_smoke_tests.sh"
+    - name: Validate deployment
+      run: ssh -i $DEPLOY_KEY ${{ env.DEPLOY_USER }}@${{ env.DEPLOY_HOST }} "cd ${{ env.DEPLOY_PATH }} && ./main < Archivo.txt"

@@ -10,7 +10,7 @@ int main() {
     cout << "Ingrese la palabra a buscar en el archivo: ";
     cin >> keyword;
 
-    ifstream file("CMakeLists.txt");
+    ifstream file("Archivo.txt");
 
     if (!file.is_open()) {
         cout << "No se pudo abrir el archivo Archivo.txt" << endl;
