@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up C++ environment
-      uses: lukka/get-cmake@v3.21.3
+      uses: lukka/get-cmake@v3
       with:
         cmake-version: '3.21.3'
       
@@ -44,7 +44,7 @@ jobs:
     - name: Audit dependencies
       run: |
         sudo apt-get install -y ldd
-        ldd ./your_executable_name
+        ldd ./main
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up C++ environment
-      uses: lukka/get-cmake@v3.21.3
+      uses: lukka/get-cmake@v3
       with:
         cmake-version: '3.21.3'
       
@@ -78,7 +78,7 @@ jobs:
       run: |
         echo "${{ secrets.PROD_SERVER_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        scp -o StrictHostKeyChecking=no ./build/your_executable_name ${{ env.PROD_SERVER_USER }}@${{ env.PROD_SERVER_HOST }}:${{ env.DEPLOY_PATH }}
+        scp -o StrictHostKeyChecking=no ./build/main ${{ env.PROD_SERVER_USER }}@${{ env.PROD_SERVER_HOST }}:${{ env.DEPLOY_PATH }}
 
     - name: Run smoke tests
       env:
@@ -86,4 +86,3 @@ jobs:
         PROD_SERVER_HOST: ${{ secrets.PROD_SERVER_HOST }}
         DEPLOY_PATH: /.github/workflows
       run: ssh -o StrictHostKeyChecking=no ${{ env.PROD_SERVER_USER }}@${{ env.PROD_SERVER_HOST }} "cd ${{ env.DEPLOY_PATH }} && ./run_smoke_tests.sh"
-
